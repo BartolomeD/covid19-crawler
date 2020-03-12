@@ -13,7 +13,7 @@ TABLE_IDS = (
 )
 
 
-def main(url, html=None)
+def main(url, html=None):
 
     if html:
         with open(html, 'r') as f:
@@ -46,7 +46,7 @@ def main(url, html=None)
         "crawled_at": "datetime64[D]"
     })
 
-    if os.path.isdir("data/"):
+    if not os.path.isdir("data/"):
         os.mkdir("data/")
 
     filename = crawled_at.strftime("%Y%m%d%H%M%S") + ".csv"
