@@ -1,4 +1,5 @@
 import os
+import re
 import requests
 import datetime
 import pandas as pd
@@ -12,17 +13,26 @@ TABLE_IDS = (
     "main_table_countries",
 )
 
+__DATE_FMT__ = "%Y%m%d%H%M%S"
 
-def main(url, html=None)
+
+def _fmt_column(col):
+    return col.strip().lower().replace(" ", "").replace("total", "")
+
+
+def main(url, html=None):
 
     if html:
         with open(html, 'r') as f:
             html = f.read()
 
+        date_string = re.search(r"(\d{14})", html).group()
+        crawled_at = datetime.datetime.strptime(date_string, __DATE_FMT__)
+
     else:
         html = requests.request("GET", url).text
+        crawled_at = datetime.datetime.utcnow()
 
-    crawled_at = datetime.datetime.utcnow()
     soup = BeautifulSoup(html, "lxml")
 
     for table_id in TABLE_IDS:
@@ -46,10 +56,12 @@ def main(url, html=None)
         "crawled_at": "datetime64[D]"
     })
 
-    if os.path.isdir("data/"):
+    if not os.path.isdir("data/"):
         os.mkdir("data/")
 
-    filename = crawled_at.strftime("%Y%m%d%H%M%S") + ".csv"
+    data.columns = [_fmt_column(col) for col in data.columns]
+
+    filename = crawled_at.strftime(__DATE_FMT__) + ".csv"
     data.to_csv(os.path.join("data/", filename), index=False)
 
     return None
