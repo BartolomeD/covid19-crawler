@@ -53,7 +53,7 @@ def main(url, html=None):
     )
 
     data = data.astype({
-        "crawled_at": "datetime64[D]"
+        "crawled_at": "datetime64[ns]"
     })
 
     if not os.path.isdir("data/"):
