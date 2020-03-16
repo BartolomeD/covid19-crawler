@@ -17,7 +17,7 @@ __DATE_FMT__ = "%Y%m%d%H%M%S"
 
 
 def _fmt_column(col):
-    return col.strip().lower().replace(" ", "").replace("total", "")
+    return col.strip().lower().replace(" ", "").replace("total", "").split(",")[0]
 
 
 def main(url, html=None):
