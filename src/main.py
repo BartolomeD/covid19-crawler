@@ -22,6 +22,9 @@ def _fmt_column(col):
 
 def main(url, html=None):
 
+    src_dir = os.path.dirname(__file__)
+    data_dir = os.path.join(src_dir, "../data/")
+
     if html:
         with open(html, 'r') as f:
             html = f.read()
@@ -56,13 +59,13 @@ def main(url, html=None):
         "crawled_at": "datetime64[ns]"
     })
 
-    if not os.path.isdir("data/"):
-        os.mkdir("data/")
+    if not os.path.isdir(data_dir):
+        os.mkdir(data_dir)
 
     data.columns = [_fmt_column(col) for col in data.columns]
 
     filename = crawled_at.strftime(__DATE_FMT__) + ".csv"
-    data.to_csv(os.path.join("data/", filename), index=False)
+    data.to_csv(os.path.join(data_dir, filename), index=False)
 
     return None
 
